@@ -1,23 +1,20 @@
-let POS = [
-    {"status":"PROOFED",
-        "PONumber":"12345",
-        "client":"Dana L",
-        "dueDate":"2022-04-26",
-        "quantity":"500",
-        "address":"154 Walnut St",
-        "state":"MA",
-        "zip":"02145",
-        "_id": 1650923285340,
-        "addedBy": "mamero",
-        "updateDate" : "2022-04-25",
-        "updatedBy" : "mamero",
-        "location":[
-            {"location":"Full Front","flashes":"1","colors":"1"},
-            {"location":"Full Back","flashes":"2","colors":"2"}
-        ],
-        "dateAdded":"2022-3-24"}
-
-]
+let POS = [ {"status":"PROOFED",
+    "PONumber":"12345",
+    "client":"Dana L",
+    "dueDate":"2022-04-26",
+    "quantity":"500",
+    "address":"154 Walnut St",
+    "state":"MA",
+    "zip":"02145",
+    "_id": 1650923285340,
+    "addedBy": "mamero",
+    "updateDate" : "2022-04-25",
+    "updatedBy" : "mamero",
+    "location":[
+        {"location":"Full Front","flashes":"1","colors":"1"},
+        {"location":"Full Back","flashes":"2","colors":"2"}
+    ],
+    "dateAdded":"2022-3-24"}]
 
 // Returns array of JSON objects
 const getAllPOs = (req, res) => {
@@ -55,8 +52,10 @@ const findAddedBy = (req, res) => {
 }
 
 const deleteOrder = (req, res) => {
+
+    POS.map(p => console.log(req.params.pid === p._id.toString()))
     const pid = req.params.pid;
-    POS = POS.filter(p => p._id.toString() !== pid);
+    POS = POS.filter(p => p._id.toString() !== pid.toString());
     res.json(POS);
 }
 
