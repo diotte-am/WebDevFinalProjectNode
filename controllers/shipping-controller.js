@@ -1,65 +1,55 @@
-rates = [
-    {
-        id: 'rate_335fa0ad0e19480db055a2b4b77b26b2',
-        object: 'Rate',
-        created_at: '2022-05-01T11:24:23Z',
-        updated_at: '2022-05-01T11:24:23Z',
-        mode: 'test',
-        service: 'Express',
-        carrier: 'USPS',
-        rate: '24.85',
-        currency: 'USD',
-        retail_rate: '29.25',
-        retail_currency: 'USD',
-        list_rate: '24.85',
-        list_currency: 'USD',
-        delivery_days: null,
-        delivery_date: null,
-        delivery_date_guaranteed: false,
-        est_delivery_days: null,
-        shipment_id: 'shp_e6a8ad70fb274f3f9ae30a8feef79eca',
-        carrier_account_id: 'ca_448e7a7168614423b2dce740f398d822'
-    },
-    {
-        id: 'rate_3449e5f4c49e49df834345af93c909f2',
-        object: 'Rate',
-        created_at: '2022-05-01T11:24:23Z',
-        updated_at: '2022-05-01T11:24:23Z',
-        mode: 'test',
-        service: 'Priority',
-        carrier: 'USPS',
-        rate: '8.45',
-        currency: 'USD',
-        retail_rate: '11.25',
-        retail_currency: 'USD',
-        list_rate: '8.45',
-        list_currency: 'USD',
-        delivery_days: 1,
-        delivery_date: null,
-        delivery_date_guaranteed: false,
-        est_delivery_days: 1,
-        shipment_id: 'shp_e6a8ad70fb274f3f9ae30a8feef79eca',
-        carrier_account_id: 'ca_448e7a7168614423b2dce740f398d822'
-    },
-    {
-        id: 'rate_535d90bfdb3b405ca7c840569b5e21b3',
-        object: 'Rate',
-        created_at: '2022-05-01T11:24:23Z',
-        updated_at: '2022-05-01T11:24:23Z',
-        mode: 'test',
-        service: 'ParcelSelect',
-        carrier: 'USPS',
-        rate: '7.55',
-        currency: 'USD',
-        retail_rate: '7.55',
-        retail_currency: 'USD',
-        list_rate: '7.55',
-        list_currency: 'USD',
-        delivery_days: 2,
-        delivery_date: null,
-        delivery_date_guaranteed: false,
-        est_delivery_days: 2,
-        shipment_id: 'shp_e6a8ad70fb274f3f9ae30a8feef79eca',
-        carrier_account_id: 'ca_448e7a7168614423b2dce740f398d822'
-    }
-]
+const Easypost = require('@easypost/api');
+const api = new Easypost('EZTK9d1ca956fb6a49b69313aab55b3cc4d9K4sCsKJ1l2QliXb3jea56w');
+const rates = []
+
+const fromAddress = new api.Address({
+    company: 'Comprint',
+    street1: '216 Newton St',
+    street2: 'R',
+    city: 'Waltham',
+    state: 'MA',
+    zip: '02453',
+    phone: '999-999-9999'
+});
+
+fromAddress.save().then((data) => {
+    // Verify an already created address
+    data.verifyAddress();
+});
+
+const toAddress = new api.Address({
+    company: 'EasyPost',
+    street1: '154 walnut Street',
+    street2: '5th Floor',
+    city: 'Somerville',
+    state: 'MA',
+    zip: '02145',
+    phone: '415-528-7555'
+});
+
+const parcel = new api.Parcel({
+    length: 20.2,
+    width: 10.9,
+    height: 5,
+    weight: 65.9
+});
+
+
+
+const shipment = new api.Shipment({
+    to_address: toAddress,
+    from_address: fromAddress,
+    parcel: parcel
+
+});
+
+shipment.save().then((shipment) => rates.push(shipment));
+
+const findShipping = async (req, res) => {
+    res.json(rates)
+}
+
+const shipping = (app) => {
+    app.get('/api/shipping' , findShipping);
+}
+module.exports = shipping;
