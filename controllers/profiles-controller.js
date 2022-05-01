@@ -63,7 +63,7 @@ const removeUser = async (req, res) => {
 const updateProfile = async (req, res) => {
     const uid = req.params['uid'];
     const updatedProfile = req.body;
-    const status = userDao.updateProfile(uid, updatedProfile);
+    const status = await userDao.updateProfile(uid, updatedProfile);
     res.sendStatus(200);
 }
 
@@ -73,7 +73,6 @@ const profiles = (app) => {
     app.get('/api/login', login);
     app.get('/api/get/user', getCurrentUser);
     app.get('/api/logout', logout);
-  //  app.get('/api/find/user', getById);
     app.delete('/api/remove/user/:uid', removeUser);
     app.put('/api/update/user/:uid', updateProfile);
 }

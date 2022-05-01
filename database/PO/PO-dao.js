@@ -8,15 +8,18 @@ const findAllPOs = async () => {
 }
 
 const createPO = async (order) => {
-
+    const newPO = await POModel.create(order)
+    return newPO;
 }
 
 const deletePO = async (pid) => {
-    await POModel.deleteOne({_id: pid})
+    const status = await POModel.deleteOne({_id: pid})
+    return status;
 }
 
 const updatePO = async (pid, order) => {
-
+    const status = await POModel.updateOne({_id: pid}, {$set: order});
+    return status;
 }
 
 

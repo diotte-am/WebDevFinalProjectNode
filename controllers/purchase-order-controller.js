@@ -1,31 +1,19 @@
-let POS = [ {"status":"PROOFED",
-    "PONumber":"12345",
-    "client":"Dana L",
-    "dueDate":"2022-04-26",
-    "quantity":"500",
-    "address":"154 Walnut St",
-    "state":"MA",
-    "zip":"02145",
-    "_id": 1650923285340,
-    "addedBy": "mamero",
-    "updateDate" : "2022-04-25",
-    "updatedBy" : "mamero",
-    "location":[
-        {"location":"Full Front","flashes":"1","colors":"1"},
-        {"location":"Full Back","flashes":"2","colors":"2"}
-    ],
-    "dateAdded":"2022-3-24"}]
+let POS = [ ]
+
+const PODao = require("../database/PO/PO-dao")
+const userDao = require("../database/user/user-dao");
 
 // Returns array of JSON objects
-const getAllPOs = (req, res) => {
+const getAllPOs = async (req, res) => {
+    const POS = await PODao.findAllPOs();
     res.json(POS)
 }
 
 // send JSON object
-const addOrder = (req, res) => {
+const addOrder = async (req, res) => {
     const order = req.body;
-    POS.push(order);
-    res.json(order);
+    const newOrder = await PODao.createPO(order);
+    res.json(newOrder);
 }
 
 // send JSON {PONumber: 12345}, return JSON with that order
@@ -51,12 +39,23 @@ const findAddedBy = (req, res) => {
     }
 }
 
-const deleteOrder = (req, res) => {
+const deleteOrder = async (req, res) => {
+    const order = POS.find(PO => PO.PONumber === PONumber.PONumber);
+    const po = req.params['pid'];
+    const status = await PODao.deletePO(po)
+    if(status){
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(404);
+    }
+}
 
-    POS.map(p => console.log(req.params.pid === p._id.toString()))
-    const pid = req.params.pid;
-    POS = POS.filter(p => p._id.toString() !== pid.toString());
-    res.json(POS);
+const updateOrder = async (req, res) => {
+    const pid = req.params['pid'];
+    console.log("PID" + pid)
+    const updatedOrder = req.body;
+    const status = await PODao.updatePO(pid, updatedOrder);
+    res.sendStatus(200);
 }
 
 const PurchaseOrders = (app) => {
@@ -65,6 +64,7 @@ const PurchaseOrders = (app) => {
     app.get('/api/find/order', findByPONumber)
     app.get('/api/added/by', findAddedBy)
     app.delete('/api/remove/order/:pid', deleteOrder);
+    app.put('/api/update/order/:pid', updateOrder);
 
 }
 
