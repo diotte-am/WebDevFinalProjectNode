@@ -17,6 +17,11 @@ const POSchema = mongoose.Schema({
             flashes: Number,
             colors: Number
         }],
+    shipping: {
+        deliveryTime: Number,
+        retailRate: String,
+        Service: String
+    },
     dateAdded:Date
 }, {collection: 'pos'})
 
