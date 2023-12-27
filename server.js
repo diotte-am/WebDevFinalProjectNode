@@ -6,7 +6,8 @@ const session = require('express-session');
 
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/WebDevFinalProjectDB');
+// this will need to be updated
+mongoose.connect('mongodb+srv://<username>:<password>@cluster0.jayxo.mongodb.net/?retryWrites=true&w=majority');
 
 app.use(express.json());
 app.use(cors());
